@@ -1,0 +1,26 @@
+#blog.blog.row
+  -if(blogs && blogs.length > 0)
+    -each blog in blogs
+      .blogList.col-xs-12.col-sm-6(id=blog._id)
+        .media
+          .media-left
+            a(href='#')
+              img.media-object(src='...', alt='图片')
+          .media-body
+            h4.media-heading
+              a(href='/user/' + blog.name) #{blog.name}
+              span 说
+              -if(user && user.name == blog.name)
+                span.editBlog 修改
+                span.deleteBlog  删除
+            div #{blog.time.minute}
+            div.blogTitle  #{blog.title}
+include paging
+  //.blogList.col-xs-12.col-sm-6
+  //  .media
+  //    .media-left
+  //      a(href='#')
+  //        img.media-object(src='...', alt='图片')
+  //    .media-body
+  //      h4.media-heading XXX说
+  //      div  内容...

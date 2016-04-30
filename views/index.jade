@@ -1,0 +1,11 @@
+extends layout
+block content
+  h1= title
+  //- if(!user)
+  div.hero-unit
+    h1 欢迎来到 Microblog
+    p Microblog 是一个基于 Node.js 的微博系统。
+  include blog
+  //- else
+  //include say
+  //include posts

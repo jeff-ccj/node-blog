@@ -1,0 +1,41 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.form-horizontal{
+  margin-top: 30px;
+}
+
+
+
+.blog{}
+.blogList{
+  position: relative;
+  margin: 10px 0;
+}
+.blogList:hover{
+  background-color: #dedede;
+}
+.blogList .media-left .media-object{
+  width: 40px;
+  height: 40px;
+}
+.editBlog, .deleteBlog{
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+}
+.deleteBlog{
+  right: 50px;
+}
+.blogTitle{
+  line-height: 24px;
+}

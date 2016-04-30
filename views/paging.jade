@@ -1,0 +1,13 @@
+nav
+  ul.pagination
+
+    li(class = pages.nowPage == 1 ? 'disabled' : '')
+      a(href= pages.nowPage == 1 ? 'javascript:;' : pages.url + 1, aria-label='Previous') «
+
+    -if(pages && pages.pageList.length > 0)
+      -each page in pages.pageList
+        li(class = page.isThis ? 'active' : '')
+          a(href= page.isThis ? 'javascript:;' : page.url) #{page.num}
+
+    li(class = pages.nowPage == pages.maxPage ? 'disabled' : '')
+      a(href=pages.nowPage == pages.maxPage ? 'javascript:;' : pages.url + pages.maxPage, aria-label='Next') »
