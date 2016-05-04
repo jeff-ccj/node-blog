@@ -174,3 +174,38 @@ Blog.edit = function(id, param, callback) {
 
 
 }
+
+
+Blog.delete = function(id, callback) {
+    mongodb.open(function (err, db){
+        if (err) {
+            mongodb.close();
+            return callback(err); //错误，返回 err 信息
+        }
+
+        db.collection('blogs', function (err, collection) {
+
+            if (err) {
+                mongodb.close();
+                return callback(err);
+            }
+
+            //更新文章内容
+            collection.remove({
+                '_id' : ObjectID(id),
+            }, {
+                safe: true
+            }, function (err) {
+                mongodb.close();
+                if (err) {
+                    return callback(err);
+                }
+                callback(null);
+            });
+
+        })
+
+    })
+
+
+}
