@@ -1,4 +1,5 @@
 var User = require('../models/user.js')
+var session = require('express-session')
 
 var user = {
 
@@ -19,7 +20,6 @@ var user = {
 
         User.get( newUser.name, function(err, user){
 
-            console.log(user)
             if (user){
                 return res.json({
                     success: 0
@@ -81,7 +81,9 @@ var user = {
 
             }
 
-            req.session.user = user;
+            //console.log(req)
+            req.session.user = user
+            console.log(req.session)
 
             return res.json({
                 success: 1

@@ -2,21 +2,21 @@
  * 微博相关
  */
 var mongodb = require('./db')
-    , ObjectID = require('mongodb').ObjectID;
+    , ObjectID = require('mongodb').ObjectID
 
 function Blog(name, title, tags, content) {
-    this.name = name;
-    this.title = title;
-    this.tags = tags;
-    this.content = content;
+    this.name = name
+    this.title = title
+    this.tags = tags
+    this.content = content
 }
 
-module.exports = Blog;
+module.exports = Blog
 
 //存储一篇文章及其相关信息
 Blog.prototype.save = function(callback) {
 
-    var date = new Date();
+    var date = new Date()
 
     //存储各种时间格式，方便以后扩展
     var time = {
@@ -37,89 +37,51 @@ Blog.prototype.save = function(callback) {
         , content: this.content
         , comments: []
         , reprint_info: {}
-    , pv: 0
-    };
+        , pv: 0
+    }
 
-    //打开数据库
-    mongodb.open(function (err, db) {
+    mongodb.save('blogs', blogData, function(err, blogList) {
+
         if (err) {
-            return callback(err); //错误，返回 err 信息
+            return callback(err)
         }
 
-        //读取 blogs 表
-        db.collection('blogs', function (err, collection) {
-            if (err) {
-                mongodb.close();
-                return callback(err);//错误，返回 err 信息
-            }
+        callback(null, blogList)
+    })
 
-            //将文档插入 blogs 集合
-            collection.insert(blogData, {
-                safe: true
-            }, function (err) {
-                mongodb.close();
-                if (err) {
-                    return callback(err);//失败！返回 err
-                }
-                callback(null, blogData);//返回 err 为 null
-            });
-
-        });
-    });
-};
+}
 
 
 Blog.getPage = function(name, pageParam, callback){
 
-    //if( typeof page == 'function'){
-    //    callback = page
-    //    pageParam.page = 1
-    //    pageParam.size = 10
-    //}
-
     var page = pageParam.page
         , pageSize = pageParam.size
+        , params = {}
 
-    mongodb.open(function (err, db){
-        if (err) {
-            mongodb.close();
-            return callback(err); //错误，返回 err 信息
+    if (name) {
+        params.name = name
+    }
+    
+    mongodb.count('blogs', params , function(err, total) {
+
+        if(total == 0){
+            return callback(err)
         }
 
-        db.collection('blogs', function (err, collection) {
+        var options = {
+            jData: "title time name"
+            , sort: {time: -1}
+            , limit: 10
+            , skip: (page - 1) * pageSize
+        }
+
+        mongodb.where('blogs', params , options, function(err, docs) {
 
             if (err) {
-                mongodb.close();
-                return callback(err);
+                return callback(err)
             }
 
-            var query = {};
-            if (name) {
-                query.name = name;
-            }
-
-            //使用 count 返回特定查询的文档数 total
-            collection.count(query, function (err, total) {
-
-                if(total == 0){
-                    return callback(err);
-                }
-
-                //根据 query 对象查询，并跳过前 (page-1)*10 个结果，返回之后的 10 个结果
-                collection.find(query, {
-                    skip: (page - 1) * pageSize,
-                    limit: pageSize
-                }).sort({
-                    time: -1
-                }).toArray(function (err, docs) {
-                    mongodb.close();
-                    if (err) {
-                        return callback(err);
-                    }
-                    //console.log(docs)
-                    callback(null, docs, total);
-                });
-            });
+            return callback(null, docs, total)
 
         })
 
@@ -128,47 +90,19 @@ Blog.getPage = function(name, pageParam, callback){
 }
 
 
-Blog.edit = function(id, param, callback) {
-    mongodb.open(function (err, db){
+Blog.edit = function(id, updateField, callback) {
+
+    var param = {
+        '_id' : ObjectID(id),
+    }
+
+    mongodb.update('blogs', param , updateField, function(err, data) {
+
         if (err) {
-            mongodb.close();
-            return callback(err); //错误，返回 err 信息
+            return callback(err)
         }
 
-        db.collection('blogs', function (err, collection) {
-
-            if (err) {
-                mongodb.close();
-                return callback(err);
-            }
-
-            //更新文章内容
-            collection.update({
-                '_id' : ObjectID(id),
-            }, {
-                $set: param
-            }, function (err) {
-                mongodb.close();
-                if (err) {
-                    return callback(err);
-                }
-                callback(null);
-            });
-
-            //collection.findOne({
-            //    '_id' : ObjectID(id)
-            //}, {}, function (err, doc) {
-            //    if (err) {
-            //        mongodb.close();
-            //        return callback(err);
-            //    }
-            //    if(doc){
-            //
-            //    }
-            //})
-
-
-        })
+        return callback(null, data)
 
     })
 
@@ -177,33 +111,18 @@ Blog.edit = function(id, param, callback) {
 
 
 Blog.delete = function(id, callback) {
-    mongodb.open(function (err, db){
+
+    var param = {
+        '_id' : ObjectID(id),
+    }
+
+    mongodb.remove('blogs', param , function(err, data) {
+
         if (err) {
-            mongodb.close();
-            return callback(err); //错误，返回 err 信息
+            return callback(err)
         }
 
-        db.collection('blogs', function (err, collection) {
-
-            if (err) {
-                mongodb.close();
-                return callback(err);
-            }
-
-            //更新文章内容
-            collection.remove({
-                '_id' : ObjectID(id),
-            }, {
-                safe: true
-            }, function (err) {
-                mongodb.close();
-                if (err) {
-                    return callback(err);
-                }
-                callback(null);
-            });
-
-        })
+        return callback(null, data)
 
     })
 

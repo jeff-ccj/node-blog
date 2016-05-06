@@ -4,4 +4,7 @@ module.exports = {
   , db: 'microblog'
   , host: 'localhost'
   , port: 27017
-};
+  , user: ''
+  , pwd: ''
+}
+

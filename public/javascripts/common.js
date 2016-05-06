@@ -144,9 +144,9 @@ var user = {
                     //修改
                     $.ajax({
 
-                        type: 'POST'
+                        type: 'PUT'
 
-                        , url: '/editBlog'
+                        , url: '/blog'
 
                         , data: {
                             id: _id
@@ -195,7 +195,7 @@ var user = {
 
                         type: 'POST'
 
-                        , url: '/sendBlog'
+                        , url: '/blog'
 
                         , data: {
                             title: sBlogTitle
@@ -314,9 +314,9 @@ $('.deleteBlog').on('click', function (event) {
 
             $.ajax({
 
-                type: 'POST'
+                type: 'DELETE'
 
-                , url: '/deleteBlog'
+                , url: '/blog'
 
                 , data: {
                     id: iThisId

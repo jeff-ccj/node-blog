@@ -1,15 +1,19 @@
 /*
- * @class  路由
- * @param  {Object}  [express对象]
- * @author Jeff Tsui
- * @mail jeff.ccjie@gmail.com
- * @date 16.04.16
+ * @class   路由绑定
+ * @author  Jeff Tsui
+ * @date    16.04.16
+ * @mail    jeff.ccjie@gmail.com
  */
 
-var crypto = require('crypto'); //md5
+//md5
+var crypto = require('crypto');
 
+/*
+ * @class 路由函数
+ * @param  {Object}  express对象
+ * @date 16.04.16
+ */
 var routes = function (app) {
-
 
     /*
      * @class  所有页面预操作
@@ -45,8 +49,9 @@ var routes = function (app) {
          * @class 发送博客post请求
          * @date 16.04.16
          */
-        .post('/sendBlog', function(req, res, next){
+        .post('/blog', function(req, res, next){
 
+            console.log(req.session.user)
             //用户名与发表内容等数据
             var currentUser = req.session.user
                 , jData = {
@@ -63,7 +68,7 @@ var routes = function (app) {
          * @class 编辑博客post请求
          * @date 16.04.16
          */
-        .post('/editBlog', function(req, res, next){
+        .put('/blog', function(req, res, next){
 
             var iId = req.body.id
                 , jData = {
@@ -79,7 +84,7 @@ var routes = function (app) {
          * @class 删除博客post请求
          * @date 16.04.16
          */
-        .post('/deleteBlog', function(req, res, next){
+        .delete('/blog', function(req, res, next){
 
             var iId = req.body.id
 

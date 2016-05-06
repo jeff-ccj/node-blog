@@ -8,7 +8,7 @@ var blog = {
         var size = 10
             , page = page || 1
 
-        var blogData = Blog.getPage(
+        Blog.getPage(
             uName
             , {
                 page: page

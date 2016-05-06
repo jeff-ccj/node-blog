@@ -1,0 +1,26 @@
+{
+  "blogs": {
+    "name": "String",
+    "time": {
+      "date": "Date",
+      "year": "String",
+      "month": "String",
+      "day": "String",
+      "minute": "String"
+    },
+    "title": "String",
+    "tags": "String",
+    "content": "String",
+    "comments": [],
+    "reprint_info": {},
+    "pv": "Number"
+  },
+  "sessions": {
+    "session": "String",
+    "expires": "Date"
+  },
+  "users": {
+    "name": { "type": "String", "unique": true },
+    "password": "String"
+  }
+}
