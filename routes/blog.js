@@ -1,8 +1,23 @@
+/*
+ * @class   博客路由
+ * @author  Jeff Tsui
+ * @date    16.05.05
+ * @mail    jeff.ccjie@gmail.com
+ */
+
 var Blog = require('../models/blog.js')
 var paginate = require('../models/paginate.js')
 
 var blog = {
 
+    /**
+     * 获取页面并实例化
+     * @param res node对象
+     * @param next 传递到下一个匹配路由
+     * @param uName 用户名
+     * @param url 页面url,用于分页
+     * @param page 页码
+     */
     get: function (res, next, uName, url, page) {
 
         var size = 10
@@ -18,7 +33,7 @@ var blog = {
 
                 if(data && data.length > 0){
 
-                    return res.render('user', {
+                    return res.render('index', {
                         title: uName ? uName + '的微博' : '首页'
                         , uName: uName
                         , blogs: data
@@ -41,9 +56,16 @@ var blog = {
             }
         )
 
-
     }
 
+
+    /**
+     * 发布博客
+     * @param res node对象
+     * @param params 发布参数
+     * @param params.name 用户名
+     * @param params.title 博客标题
+     */
     , send: function (res, params) {
 
         var blog = new Blog(params.name, params.title);
@@ -68,6 +90,13 @@ var blog = {
         });
     }
 
+
+    /**
+     * 修改博客
+     * @param res node对象
+     * @param id [ObjectId] 博客id
+     * @param params [Object] 发布参数
+     */
     , edit: function (res, id, params) {
 
         Blog.edit(id, params, function (err) {
@@ -88,6 +117,12 @@ var blog = {
         });
     }
 
+
+    /**
+     * 删除博客
+     * @param res node对象
+     * @param id [ObjectId] 博客id
+     */
     , delete: function (res, id) {
 
         Blog.delete(id, function (err) {
@@ -109,7 +144,7 @@ var blog = {
 
 }
 
-
+//暴露接口
 module.exports = blog;
 
 

@@ -1,9 +1,20 @@
 /*
- * 微博相关
+ * @class   博客相关操作
+ * @author  Jeff Tsui
+ * @date    16.05.05
+ * @mail    jeff.ccjie@gmail.com
  */
+
 var mongodb = require('./db')
     , ObjectID = require('mongodb').ObjectID
 
+/**
+ * 实例化函数传参
+ * @param name 用户名
+ * @param title 标题
+ * @param tags 标签
+ * @param content 内容
+ */
 function Blog(name, title, tags, content) {
     this.name = name
     this.title = title
@@ -11,9 +22,14 @@ function Blog(name, title, tags, content) {
     this.content = content
 }
 
+//暴露接口
 module.exports = Blog
 
-//存储一篇文章及其相关信息
+
+/**
+ * 提交一篇博客
+ * @param callback(err,data) 回调函数
+ */
 Blog.prototype.save = function(callback) {
 
     var date = new Date()
@@ -52,6 +68,14 @@ Blog.prototype.save = function(callback) {
 }
 
 
+/**
+ * 获取博客列表
+ * @param name 用户名
+ * @param pageParam 分页参数
+ * @param pageParam.page 页码
+ * @param pageParam.size 一页多少篇
+ * @param callback(err,data) 回调函数
+ */
 Blog.getPage = function(name, pageParam, callback){
 
     var page = pageParam.page
@@ -90,6 +114,12 @@ Blog.getPage = function(name, pageParam, callback){
 }
 
 
+/**
+ * 修改内容
+ * @param id 博客id
+ * @param updateField [Object] 修改数据
+ * @param callback(err,data) 回调函数
+ */
 Blog.edit = function(id, updateField, callback) {
 
     var param = {
@@ -110,6 +140,11 @@ Blog.edit = function(id, updateField, callback) {
 }
 
 
+/**
+ * 删除博客
+ * @param id 博客id
+ * @param callback(err,data) 回调函数
+ */
 Blog.delete = function(id, callback) {
 
     var param = {

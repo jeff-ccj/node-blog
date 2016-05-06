@@ -51,7 +51,6 @@ var routes = function (app) {
          */
         .post('/blog', function(req, res, next){
 
-            console.log(req.session.user)
             //用户名与发表内容等数据
             var currentUser = req.session.user
                 , jData = {
@@ -183,8 +182,23 @@ var routes = function (app) {
      * @date 16.05.04
      */
     app.use(function (req, res) {
-        //res.render("404");
-        res.send("404");
+
+        var tipsInfo = {
+            statusCode : 404
+            , msg : '找不到页面'
+            , pre : '错误代码'
+        }
+        res.status(tipsInfo.statusCode)
+            .render('error', {
+                title: '服务器错误'
+                , message: tipsInfo.msg
+                , error: {
+                    status : tipsInfo.statusCode
+                    , stack : tipsInfo.pre
+                }
+
+            })
+
     });
 
 

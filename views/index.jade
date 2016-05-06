@@ -1,11 +1,17 @@
-extends layout
+//-
+  * @page    首页
+  * @author  Jeff Tsui
+  * @date    16.04.20
+  * @mail    jeff.ccjie@gmail.com
+
+extends base/layout
 block content
-  h1= title
-  //- if(!user)
-  div.hero-unit
-    h1 欢迎来到 Microblog
-    p Microblog 是一个基于 Node.js 的微博系统。
-  include blog
+  - if(uName)
+    h1 #{uName} 的博客
+  - else
+    h1 所有博客
+
+  include blog/blog
   //- else
   //include say
   //include posts

@@ -20,19 +20,6 @@ var dbURL = 'mongodb://'
 
 mongoose.connect(dbURL)
 
-//
-//var mongooseSession = require('mongoose-session')
-//var session = require('express-session')
-//var express = require('express')
-//var app = express()
-//
-//app.use(session({
-//    key: 'session'
-//    , secret: 'microblogCookie'
-//    //, cookie: {maxAge: 1000 * 60 * 60 * 24 * 30} //30 days
-//    , store: mongooseSession(mongoose)
-//}))
-
 mongoose.connection.on('connected', function (err) {
     if (err) {
         logger.error('Database connection failure')
@@ -107,7 +94,7 @@ DB.prototype.save = function (tableName, jData, callback) {
         if (!this.tabConf[tableName][i]) err_num ++
     }
     if (err_num > 0) {
-        if (callback) callback({msg: 'Wrong field name'})
+        if (callback) callback({msg: 'Wrong key name'})
         return false
     }
 

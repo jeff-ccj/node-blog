@@ -1,8 +1,18 @@
+/*
+ * @class   用户管理相关路由
+ * @author  Jeff Tsui
+ * @date    16.05.05
+ * @mail    jeff.ccjie@gmail.com
+ */
+
 var User = require('../models/user.js')
-var session = require('express-session')
 
 var user = {
 
+    /**
+     * 获取注册页面
+     * @param res node对象
+     */
     getRegister: function (res) {
 
         res.render('reg', {
@@ -11,6 +21,15 @@ var user = {
 
     }
 
+
+    /**
+     * 用户注册
+     * @param req node对象
+     * @param res node对象
+     * @param jData 注册信息
+     * @param jData.username 用户名
+     * @param jData.password 密码
+     */
     , register: function (req, res, jData) {
 
         var newUser = new User({
@@ -51,6 +70,11 @@ var user = {
 
     }
 
+
+    /**
+     * 用户登陆页面
+     * @param res node对象
+     */
     , getLogin: function (res) {
 
         res.render('login', {
@@ -59,6 +83,15 @@ var user = {
 
     }
 
+
+    /**
+     * 用户登陆
+     * @param req node对象
+     * @param res node对象
+     * @param jData 登陆信息
+     * @param jData.username 用户名
+     * @param jData.password 密码
+     */
     , login: function (req, res, jData) {
 
         User.get(jData.username , function(err, user){
@@ -95,6 +128,12 @@ var user = {
 
     }
 
+
+    /**
+     * 退出登陆
+     * @param req node对象
+     * @param res node对象
+     */
     , logout: function (req, res) {
 
         req.session.user = null;

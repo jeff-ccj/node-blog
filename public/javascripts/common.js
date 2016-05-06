@@ -217,11 +217,14 @@ var user = {
                                 if(data.json){
 
                                     var oData = data.json
+                                        , blogImg = '<div class="media-left"><a href="#"><img class="media-object" alt="图片" src="..."></a></div>'
+
+                                    if(!oData.Img) blogImg = ''
 
                                     $('#blog').prepend(
-                                        '<div class="blogList col-xs-12 col-sm-6"><div class="media"><div class="media-left">' +
-                                        '<a href="#"><img class="media-object" alt="图片" src="..."></a></div>' +
-                                        '<div class="media-body"><h4 class="media-heading"><a href="/user/ggjhhgj">' + oData.name + '</a><span>说</span></h4>' +
+                                        '<div class="blogList col-xs-12 col-sm-6"><div class="media">' +
+                                        blogImg +
+                                        '<div class="media-body"><h4 class="media-heading"><a href="/user/' + oData.name + '">' + oData.name + '</a><span>说</span></h4>' +
                                         '<div>' + oData.time.minute + '</div>' +
                                         '<div class="blogTitle"> ' + oData.title + '</div>' +
                                         '</div></div></div>'
