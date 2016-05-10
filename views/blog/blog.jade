@@ -21,7 +21,9 @@
                 span.editBlog 修改
                 span.deleteBlog  删除
             div #{blog.time.minute}
-            div.blogTitle  #{blog.title}
+            div.blogTitle #{blog.title}
+  -else
+    h4 暂无数据
 include ../base/paging
   //.blogList.col-xs-12.col-sm-6
   //  .media

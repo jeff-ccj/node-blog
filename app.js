@@ -15,6 +15,8 @@ var path = require('path')
 var favicon = require('static-favicon')
 //文件操作
 var fs = require('fs')
+//上传中间件
+var multiparty = require('multiparty')
 //日志
 //var logger = require('pomelo-logger').getLogger('apps-log')
 //路由
@@ -25,7 +27,13 @@ var app = express()
 //设置静态文件地址&模板
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+  extended: true
+ , limit: '50mb'
+}))
+app.use(bodyParser.json({
+ limit: '50mb'
+}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 //session & cookie 中间件
@@ -35,7 +43,6 @@ var MongoStore = require('connect-mongo')(session)
 var settings = require('./settings')
 
 app.use(cookieParser())
-
 //设置数据库session
 app.use(session({
   secret: settings.cookieSecret,

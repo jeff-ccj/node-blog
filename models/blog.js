@@ -15,11 +15,12 @@ var mongodb = require('./db')
  * @param tags 标签
  * @param content 内容
  */
-function Blog(name, title, tags, content) {
-    this.name = name
-    this.title = title
-    this.tags = tags
-    this.content = content
+function Blog(jParams) {
+
+    for(var i in jParams){
+        this[i] = jParams[i]
+    }
+
 }
 
 //暴露接口
@@ -47,6 +48,7 @@ Blog.prototype.save = function(callback) {
     //要存入数据库的文档
     var blogData = {
         name: this.name
+        , thumbPic: this.thumbPic || ''
         , time: time
         , title: this.title
         , tags: this.tags
@@ -61,6 +63,7 @@ Blog.prototype.save = function(callback) {
         if (err) {
             return callback(err)
         }
+
 
         callback(null, blogList)
     })
@@ -87,10 +90,6 @@ Blog.getPage = function(name, pageParam, callback){
     }
     
     mongodb.count('blogs', params , function(err, total) {
-
-        if(total == 0){
-            return callback(err)
-        }
 
         var options = {
             jData: "title time name"
@@ -148,7 +147,7 @@ Blog.edit = function(id, updateField, callback) {
 Blog.delete = function(id, callback) {
 
     var param = {
-        '_id' : ObjectID(id),
+        '_id' : ObjectID(id)
     }
 
     mongodb.remove('blogs', param , function(err, data) {

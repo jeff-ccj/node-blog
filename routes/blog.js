@@ -31,7 +31,16 @@ var blog = {
             }
             , function (err, data, count) {
 
-                if(data && data.length > 0){
+                //超过页数
+                if(page > count / size && page != 1){
+
+                    next()
+
+                    return
+
+                }
+
+                if(data){
 
                     return res.render('index', {
                         title: uName ? uName + '的微博' : '首页'
@@ -43,7 +52,7 @@ var blog = {
                             , count: count
                             , url: url
                         })
-                    });
+                    })
 
                 }else {
 
@@ -68,15 +77,15 @@ var blog = {
      */
     , send: function (res, params) {
 
-        var blog = new Blog(params.name, params.title);
+        var blog = new Blog(params)
 
         blog.save(function (err, data) {
 
             if (err) {
                 return res.json({
                     success: 0
-                    , data: err
-                });
+                    , data: err.msg
+                })
             }
 
             if (data) {
@@ -84,10 +93,10 @@ var blog = {
                     success: 1
                     , msg: '发布成功'
                     , json: data
-                });
+                })
             }
 
-        });
+        })
     }
 
 
@@ -104,17 +113,17 @@ var blog = {
             if (err) {
                 return res.json({
                     success: 0
-                    , data: err
-                });
+                    , data: err.msg
+                })
             }
 
             return res.json({
                 success: 1
                 , msg: '修改成功'
                 , json: params
-            });
+            })
 
-        });
+        })
     }
 
 
@@ -130,21 +139,21 @@ var blog = {
             if (err) {
                 return res.json({
                     success: 0
-                    , data: err
-                });
+                    , data: err.msg
+                })
             }
 
             return res.json({
                 success: 1
                 , msg: '删除成功'
-            });
+            })
 
-        });
+        })
     }
 
 }
 
 //暴露接口
-module.exports = blog;
+module.exports = blog
 
 

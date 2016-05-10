@@ -17,6 +17,6 @@
     "mongodb": "*",
     "mongoose": "*",
     "connect-mongo": "*",
-    "multer": "0.1.6"
+    "multiparty": "*"
   }
 }

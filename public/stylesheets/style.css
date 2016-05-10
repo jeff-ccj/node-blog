@@ -12,7 +12,6 @@ a {
 }
 
 
-
 .blog{}
 .blogList{
   position: relative;
@@ -38,4 +37,36 @@ a {
 }
 .blogTitle{
   line-height: 24px;
+}
+
+.alert{
+  position: fixed;
+  right: 50%;
+  top: 150px;
+  z-index: 1100;
+  width: 600px;
+  height: 150px;
+  margin: 0 -300px 0 0;
+  background-color: #ffffff;
+  border: 1px solid #d1d1d1;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+}
+.alert .alertBtn{
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -30px;
+}
+.alert .alertTitle{
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+.alert .alertContent{
+  padding: 10px 0;
+  color: #666666;
+}
+
+#blogToolBox .form-control{
+  margin-bottom: 10px;
 }

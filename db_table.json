@@ -1,6 +1,7 @@
 {
   "blogs": {
     "name": "String",
+    "thumbPic": "String",
     "time": {
       "date": "Date",
       "year": "String",

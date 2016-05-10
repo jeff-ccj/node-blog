@@ -5,52 +5,116 @@ var popup = {
 
         option = option || {}
 
-        options = {
-            title: option.title || '弹出层'
+        var options = {
+            id: option.id || !1
+            , width: option.width || 800
+            , title: option.title || '弹出层'
             , body: option.body || '提示信息'
             , submitTxt: option.submitTxt || '确定'
             , cancelTxt: option.cancelTxt || '取消'
-            , submitFn: option.submitCallBack || function () {}
-            , cancelFn: option.cancelCallBack || function () {}
+            , onloadFn: option.loadBodyFn || function () {
+            }
+            , submitFn: option.submitCallBack || function () {
+            }
+            , cancelFn: option.cancelCallBack || function () {
+            }
         }
 
-        var modalId = 'modal' + +new Date()
-            , tpl = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog">'
-            + '<div class="modal-content"><div class="modal-header">'
-            + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
-            + '<h4 class="modal-title" id="myModalLabel">' + options.title + '</h4>'
-            + '</div>'
-            + '<div class="modal-body">' + options.body + '</div>'
-            + '<div class="modal-footer">'
-            + '<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">' + options.cancelTxt + '</button>'
-            + '<button type="button" id="submitBtn" class="btn btn-primary">' + options.submitTxt + '</button>'
-            + '</div></div></div></div>'
-            , $modal
+        var modalId = !options.id && 'modal' + +new Date() || options.id
+            , $modal = $('#' + modalId)
 
-        $('body').append(tpl)
 
-        $modal = $('#' + modalId)
+        //假如有ID,无数量
+        if ($modal.length < 1) {
 
-        $modal.on('click', '#cancelBtn', function () {
-            options.cancelFn()
+            var tpl = '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog">'
+                + '<div class="modal-content"><div class="modal-header">'
+                + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+                + '<h4 class="modal-title" id="myModalLabel">' + options.title + '</h4>'
+                + '</div>'
+                + '<div class="modal-body">' + options.body + '</div>'
+                + '<div class="modal-footer">'
+                + '<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">' + options.cancelTxt + '</button>'
+                + '<button type="button" id="submitBtn" class="btn btn-primary">' + options.submitTxt + '</button>'
+                + '</div></div></div></div>'
+
+
+            $('body').append(tpl)
+
+            $modal = $('#' + modalId)
+
+            $modal.on('click', '#cancelBtn', function () {
+                options.cancelFn()
+            })
+
+            $modal.on('click', '#submitBtn', function () {
+                options.submitFn($modal)
+            })
+
+        } else {
+
+            //否则
+            $modal = $('#' + options.id)
+
+        }
+
+        options.onloadFn($modal)
+
+        $modal.find('.modal-dialog').css({
+            width: options.width
         })
 
-        $modal.on('click', '#submitBtn', function () {
-            options.submitFn($modal)
-        })
 
-        $modal.on(
-            'hidden.bs.modal'
-            , function(){
-                $modal.remove()
-            }
-        )
+        //$modal.on(
+        //    'hidden.bs.modal'
+        //    , function () {
+        //        $modal.remove()
+        //    }
+        //)
 
-        $modal.modal('show');
+        $modal.modal('show')
 
         return $modal
     }
 
+    ,alert: function(option) {
+
+        option = option || {}
+
+        var options = {
+            width: option.width || 600
+            , title: option.title || '弹出层'
+            , body: option.body || '提示信息'
+            , cancelTxt: option.cancelTxt || '确定'
+            , cancelFn: option.cancelCallBack || function () {
+            }
+        }
+            , modalId = 'alert' + +new Date()
+            , tpl = '<div id="' + modalId +'" class="alert fade">' +
+            '<div class="alertTitle">' + options.title + '</div>' +
+            '<div class="alertContent">' + options.body + '</div>' +
+            '<a href="#" class="btn btn-primary alertBtn" data-dismiss="alert">' + options.cancelTxt + '</a>' +
+            '</div>'
+            , $modal
+
+        $('body').append(
+            tpl
+        )
+
+        $modal = $('#' + modalId)
+
+        setTimeout(function(){
+            $modal.addClass('in')
+        }, 100)
+
+        $modal.on(
+            'closed.bs.alert'
+            , function () {
+                options.cancelFn()
+            }
+        )
+
+    }
 }
 
 
@@ -72,12 +136,9 @@ var user = {
 
                 if(!data.success){
 
-                    popup.modal({
+                    popup.alert({
                         title : '提示'
                         , body : data.msg
-                        , submitCallBack: function (body) {
-                            body.modal('hide');
-                        }
                     })
                     return
                 }
@@ -89,7 +150,7 @@ var user = {
 
             dataType: 'json'
 
-        });
+        })
     }
 
     , logout: function () {
@@ -111,7 +172,7 @@ var user = {
 
             dataType: 'json'
 
-        });
+        })
 
     }
 
@@ -120,21 +181,63 @@ var user = {
         var tpl = '<div><div class="form-group">'
             + '<label for="blogTxt">请输入需要发布内容</label>'
             + '<input type="text" class="form-control" id="blogTitle" placeholder="请输入内容">'
+            + '<input type="text" class="form-control" id="blogTags" placeholder="请输入标签(多个可用逗号,隔开">'
+            + '<div id="blogContent"></div>'
             + '</div>'
             + '</div>'
             , $thisTitle
 
-
         popup.modal({
-            title: _id ? '修改微博' : '发微博'
+            id: 'blogToolBox'
+            , title: _id ? '修改微博' : '发微博'
             , submitTxt: '提交'
             , body: tpl
+            , loadBodyFn: function ($body) {
+
+                $('#blogContent').summernote({
+
+                    height: 200
+                    , onImageUpload: function (files, editor, $editable) {
+                        console.log('image upload:', files, editor, $editable)
+                        //sendFile(files[0], editor, $editable)
+                        //$('#summernote').summernote('editor.insertImage', "图片的url");
+                    }
+
+                })
+
+                //如果是修改,初始化数据
+                if(_id){
+                    $this = $('#'+_id)
+                    $thisTitle = $this.find('.blogTitle')
+                    $thisContent = $this.find('.blogContent')
+                    $('#blogTitle').val($thisTitle.text())
+                    $('#blogContent').summernote(
+                        'code', $thisContent.html() || '<br>'
+                    )
+                }else {
+
+                    //否则清空数据
+                    $body.find('input').val('')
+                    $('#blogContent').summernote(
+                        'code', '<br>'
+                    )
+
+                }
+
+
+            }
             , submitCallBack: function (body) {
 
                 var sBlogTitle = $('#blogTitle').val()
+                    , sBlogTags = $('#blogTags').val()
+                    , sBlogContent = $('#blogContent').summernote('code')
 
                 if (!sBlogTitle) {
-                    alert('标题不能为空')
+
+                    popup.alert({
+                        title: '提示'
+                        , body: '标题不能为空'
+                    })
                     return
                 }
 
@@ -151,31 +254,27 @@ var user = {
                         , data: {
                             id: _id
                             , title: sBlogTitle
+                            , tags: sBlogTags
+                            , content: sBlogContent
                         }
 
                         , success: function (data) {
 
-                            body.modal('hide');
+                            body.modal('hide')
 
                             if(data.success){
-                                popup.modal({
+                                popup.alert({
                                     title: '提示'
                                     , body: '修改成功'
-                                    , submitCallBack: function (body) {
-                                        body.modal('hide');
-                                    }
                                 })
 
                                 var oData = data.json
                                 $thisTitle.text(oData.title)
 
                             }else {
-                                popup.modal({
+                                popup.alert({
                                     title: '警告'
                                     , body: data.data.errmsg
-                                    , submitCallBack: function (body) {
-                                        body.modal('hide');
-                                    }
                                 })
                             }
 
@@ -184,7 +283,7 @@ var user = {
 
                         dataType: 'json'
 
-                    });
+                    })
 
 
 
@@ -199,19 +298,18 @@ var user = {
 
                         , data: {
                             title: sBlogTitle
+                            , tags: sBlogTags
+                            , content: sBlogContent
                         }
 
                         , success: function (data) {
 
-                            body.modal('hide');
+                            body.modal('hide')
 
                             if(data.success){
-                                popup.modal({
+                                popup.alert({
                                     title: '提示'
                                     , body: '发布成功'
-                                    , submitCallBack: function (body) {
-                                        body.modal('hide');
-                                    }
                                 })
 
                                 if(data.json){
@@ -234,12 +332,9 @@ var user = {
                                 }
 
                             }else {
-                                popup.modal({
+                                popup.alert({
                                     title: '警告'
                                     , body: data.data.errmsg
-                                    , submitCallBack: function (body) {
-                                        body.modal('hide');
-                                    }
                                 })
                             }
 
@@ -248,7 +343,7 @@ var user = {
 
                         dataType: 'json'
 
-                    });
+                    })
 
                 }
             }
@@ -256,10 +351,9 @@ var user = {
         })
 
 
-        if(_id){
-            $thisTitle = $('#'+_id).find('.blogTitle')
-            $('#blogTitle').val($thisTitle.text())
-        }
+
+
+
 
     }
 }
@@ -274,7 +368,7 @@ $('#logout').on('click', function (event) {
         , body: '确定登出吗?'
         , submitCallBack: function (body) {
             user.logout()
-            body.modal('hide');
+            body.modal('hide')
         }
     })
 
@@ -309,6 +403,7 @@ $('.deleteBlog').on('click', function (event) {
     var $this = $(this)
         , iThisId = $this.parents('.blogList')[0].id
 
+
     popup.modal({
         title: '删除微博'
         , submitTxt: '确定'
@@ -327,27 +422,21 @@ $('.deleteBlog').on('click', function (event) {
 
                 , success: function (data) {
 
-                    body.modal('hide');
+                    body.modal('hide')
 
                     if(data.success){
 
-                        popup.modal({
+                        popup.alert({
                             title: '提示'
                             , body: '删除成功'
-                            , submitCallBack: function (body) {
-                                body.modal('hide');
-                            }
                         })
 
                         $('#' + iThisId).remove()
 
                     }else {
-                        popup.modal({
+                        popup.alert({
                             title: '警告'
                             , body: data.data.errmsg
-                            , submitCallBack: function (body) {
-                                body.modal('hide');
-                            }
                         })
                     }
 
@@ -356,10 +445,13 @@ $('.deleteBlog').on('click', function (event) {
 
                 dataType: 'json'
 
-            });
+            })
 
         }
     })
 
 
+
 })
+
+

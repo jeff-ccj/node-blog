@@ -7,7 +7,7 @@ $(function () {
             , sRePsw = $('#passwordRepeat').val()
 
         if (!sPsw || !sUserName) {
-            popup.modal({
+            popup.alert({
                 title: '提示'
                 , body: '账号或密码不能为空'
             })
@@ -16,7 +16,7 @@ $(function () {
 
         if (sPsw != sRePsw) {
 
-            popup.modal({
+            popup.alert({
                 title: '提示'
                 , body: '两次输入密码不相同'
             })
@@ -39,20 +39,16 @@ $(function () {
 
                 if (!data.success) {
 
-                    popup.modal({
+                    popup.alert({
                         title: '提示'
                         , body: data.msg
                     })
 
                 } else {
 
-                    popup.modal({
+                    popup.alert({
                         title: '提示'
                         , body: data.msg
-                        , submitCallBack: function (body) {
-                            body.modal('hide');
-                            location.href = '/'
-                        }
                     })
 
                 }
@@ -67,4 +63,7 @@ $(function () {
 
     })
 
+
+
 })
+

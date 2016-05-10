@@ -6,7 +6,7 @@
  */
 
 //md5
-var crypto = require('crypto');
+var crypto = require('crypto')
 
 /*
  * @class 路由函数
@@ -22,7 +22,7 @@ var routes = function (app) {
     //app.get('*', function (req, res, next) {
     //
     //
-    //});
+    //})
 
 
     /*
@@ -56,6 +56,8 @@ var routes = function (app) {
                 , jData = {
                 name: currentUser.name
                 , title: req.body.title
+                , tags: req.body.tags
+                , content: req.body.content
             }
 
             //调用发送函数
@@ -72,6 +74,7 @@ var routes = function (app) {
             var iId = req.body.id
                 , jData = {
                 title: req.body.title
+                , content: req.body.content
             }
 
             blog.edit(res, iId, jData)
@@ -102,7 +105,7 @@ var routes = function (app) {
 
             blog.get(res, next, uName, '/user/' + uName, iPage)
 
-        });
+        })
 
 
     /*
@@ -117,7 +120,7 @@ var routes = function (app) {
      */
     app.get('/reg', function (req, res) {
 
-            userManage.getRegister(res);
+            userManage.getRegister(res)
 
         })
 
@@ -132,9 +135,9 @@ var routes = function (app) {
                 , jData = {
                 username: req.body.username
                 , password: password
-            };
+            }
 
-            userManage.register(req, res, jData);
+            userManage.register(req, res, jData)
 
         })
 
@@ -145,7 +148,7 @@ var routes = function (app) {
          */
         .get('/login', function (req, res) {
 
-            userManage.getLogin(res);
+            userManage.getLogin(res)
 
         })
 
@@ -160,9 +163,9 @@ var routes = function (app) {
                 , jData = {
                 username: req.body.username
                 , password: password
-            };
+            }
 
-            userManage.login(req, res, jData);
+            userManage.login(req, res, jData)
 
         })
 
@@ -172,9 +175,20 @@ var routes = function (app) {
          */
         .post('/logout', function (req, res) {
 
-            userManage.logout(req, res);
+            userManage.logout(req, res)
 
-        });
+        })
+
+
+    /*
+     * @class 文件上传
+     * @date 16.05.10
+     */
+    app.use(function (req, res) {
+
+        
+
+    })
 
 
     /*
@@ -182,6 +196,7 @@ var routes = function (app) {
      * @date 16.05.04
      */
     app.use(function (req, res) {
+
 
         var tipsInfo = {
             statusCode : 404
@@ -199,12 +214,11 @@ var routes = function (app) {
 
             })
 
-    });
+
+    })
 
 
 }
-
-
 
 
 module.exports = routes
