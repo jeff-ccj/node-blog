@@ -1,0 +1,15 @@
+//-
+  * @page    博客详情
+  * @author  Jeff Tsui
+  * @date    16.05.11
+  * @mail    jeff.ccjie@gmail.com
+extends ../base/layout
+block content
+  h1 #{blog.title}
+  div.info
+    span.tags #{blog.tags}
+    span.time #{blog.time.minute}
+    span.arrow |
+    a(href='/user/' + blog.name) #{blog.name}
+  div.contentBox.
+    !{blog.content}

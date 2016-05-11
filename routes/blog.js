@@ -32,7 +32,7 @@ var blog = {
             , function (err, data, count) {
 
                 //超过页数
-                if(page > count / size && page != 1){
+                if(page > Math.ceil(count / size) && page != 1){
 
                     next()
 
@@ -149,6 +149,34 @@ var blog = {
             })
 
         })
+    }
+
+
+    /**
+     * 获取单篇博客
+     * @param res node对象
+     * @param id [ObjectId] 博客id
+     */
+    , getOne : function (res, id) {
+
+        Blog.getBlogItem(id, function(err, data){
+
+            if(data){
+
+                return res.render('blog/item', {
+                    title: data.title
+                    , blog: data
+                })
+
+            }else {
+
+                //404
+                next()
+
+            }
+
+        })
+
     }
 
 }

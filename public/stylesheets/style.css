@@ -38,6 +38,29 @@ a {
 .blogTitle{
   line-height: 24px;
 }
+.uploadImg{
+  position: relative;
+  width: 100px;
+  height: 80px;
+  line-height: 80px;
+  background-color: #dddddd;
+  color: #333;
+  overflow: hidden;
+  text-align: center;
+}
+.uploadImg .inputFile{
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  opacity: 0.000001;
+  cursor: pointer;
+}
+.uploadImg img{
+  max-width: 100%;
+}
+
 
 .alert{
   position: fixed;

@@ -9,19 +9,21 @@
     -each blog in blogs
       .blogList.col-xs-12.col-sm-6(id=blog._id)
         .media
-          -if(blog.img)
+          -if(blog.thumbPic)
             .media-left
               a(href='#')
-                img.media-object(src='...', alt='图片')
+                img.media-object(src=blog.thumbPic, alt='图片')
           .media-body
             h4.media-heading
-              a(href='/user/' + blog.name) #{blog.name}
-              span 说
+              a.blogTitle(href='/blog/'+ blog._id) #{blog.title}
+
               -if(user && user.name == blog.name)
                 span.editBlog 修改
                 span.deleteBlog  删除
+            div
+              span 作者:
+              a(href='/user/' + blog.name) #{blog.name}
             div #{blog.time.minute}
-            div.blogTitle #{blog.title}
   -else
     h4 暂无数据
 include ../base/paging

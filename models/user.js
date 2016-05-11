@@ -6,7 +6,6 @@
  */
 
 var mongodb = require('./db')
-var crypto = require('crypto')
 
 /**
  * 实例化函数传参

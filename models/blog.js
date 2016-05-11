@@ -26,7 +26,6 @@ function Blog(jParams) {
 //暴露接口
 module.exports = Blog
 
-
 /**
  * 提交一篇博客
  * @param callback(err,data) 回调函数
@@ -64,7 +63,6 @@ Blog.prototype.save = function(callback) {
             return callback(err)
         }
 
-
         callback(null, blogList)
     })
 
@@ -92,7 +90,7 @@ Blog.getPage = function(name, pageParam, callback){
     mongodb.count('blogs', params , function(err, total) {
 
         var options = {
-            jData: "title time name"
+            jData: "title time name thumbPic"
             , sort: {time: -1}
             , limit: 10
             , skip: (page - 1) * pageSize
@@ -160,5 +158,24 @@ Blog.delete = function(id, callback) {
 
     })
 
+
+}
+
+/**
+ * 获取单篇文章
+ * @param id 博客id
+ * @param callback(err,data) 回调函数
+ */
+Blog.getBlogItem = function(id, callback) {
+
+    mongodb.findById('blogs', id , function(err, data) {
+
+        if (err) {
+            return callback(err)
+        }
+
+        return callback(null, data)
+
+    })
 
 }

@@ -178,12 +178,18 @@ var user = {
 
     , sendBlog: function (_id) {
 
-        var tpl = '<div><div class="form-group">'
+        var tpl = '<div class="form-group">'
             + '<label for="blogTxt">请输入需要发布内容</label>'
+            + '<div class="row">'
+            + '<div class="col-md-2">'
+            + '<div class="uploadImg" id="uploadImg">'
+            + '<span id="uploadImgTips">上传封面图</span>'
+            + '<input type="file" class="inputFile" id="inputFile"></div>'
+            + '</div><div class="col-md-9">'
             + '<input type="text" class="form-control" id="blogTitle" placeholder="请输入内容">'
             + '<input type="text" class="form-control" id="blogTags" placeholder="请输入标签(多个可用逗号,隔开">'
+            + '</div></div>'
             + '<div id="blogContent"></div>'
-            + '</div>'
             + '</div>'
             , $thisTitle
 
@@ -206,8 +212,8 @@ var user = {
                 })
 
                 //如果是修改,初始化数据
-                if(_id){
-                    $this = $('#'+_id)
+                if (_id) {
+                    $this = $('#' + _id)
                     $thisTitle = $this.find('.blogTitle')
                     $thisContent = $this.find('.blogContent')
                     $('#blogTitle').val($thisTitle.text())
@@ -231,6 +237,8 @@ var user = {
                 var sBlogTitle = $('#blogTitle').val()
                     , sBlogTags = $('#blogTags').val()
                     , sBlogContent = $('#blogContent').summernote('code')
+                    , sImgSrc = $('#uploadForImg').attr('src')
+                    , isBaseData = new RegExp(/^data:image/)
 
                 if (!sBlogTitle) {
 
@@ -241,103 +249,26 @@ var user = {
                     return
                 }
 
-                if(_id){
 
-
-                    //修改
-                    $.ajax({
-
-                        type: 'PUT'
-
-                        , url: '/blog'
-
-                        , data: {
-                            id: _id
-                            , title: sBlogTitle
-                            , tags: sBlogTags
-                            , content: sBlogContent
-                        }
-
-                        , success: function (data) {
-
-                            body.modal('hide')
-
-                            if(data.success){
-                                popup.alert({
-                                    title: '提示'
-                                    , body: '修改成功'
-                                })
-
-                                var oData = data.json
-                                $thisTitle.text(oData.title)
-
-                            }else {
-                                popup.alert({
-                                    title: '警告'
-                                    , body: data.data.errmsg
-                                })
-                            }
-
-
-                        },
-
-                        dataType: 'json'
-
-                    })
-
-
-
-                }else {
-
+                //判断图片是否base64格式,如果是,则先上传
+                if(isBaseData.test(sImgSrc)){
 
                     $.ajax({
 
                         type: 'POST'
 
-                        , url: '/blog'
+                        , url: '/upload/image'
 
                         , data: {
-                            title: sBlogTitle
-                            , tags: sBlogTags
-                            , content: sBlogContent
+
+                            pic: sImgSrc
+
                         }
 
                         , success: function (data) {
 
-                            body.modal('hide')
-
-                            if(data.success){
-                                popup.alert({
-                                    title: '提示'
-                                    , body: '发布成功'
-                                })
-
-                                if(data.json){
-
-                                    var oData = data.json
-                                        , blogImg = '<div class="media-left"><a href="#"><img class="media-object" alt="图片" src="..."></a></div>'
-
-                                    if(!oData.Img) blogImg = ''
-
-                                    $('#blog').prepend(
-                                        '<div class="blogList col-xs-12 col-sm-6"><div class="media">' +
-                                        blogImg +
-                                        '<div class="media-body"><h4 class="media-heading"><a href="/user/' + oData.name + '">' + oData.name + '</a><span>说</span></h4>' +
-                                        '<div>' + oData.time.minute + '</div>' +
-                                        '<div class="blogTitle"> ' + oData.title + '</div>' +
-                                        '</div></div></div>'
-                                    )
-
-
-                                }
-
-                            }else {
-                                popup.alert({
-                                    title: '警告'
-                                    , body: data.data.errmsg
-                                })
-                            }
-
+                            sImgSrc = data.data.url
+                            blogEdit()
 
                         },
 
@@ -345,6 +276,119 @@ var user = {
 
                     })
 
+
+                }else {
+
+                    blogEdit()
+
+                }
+
+                function blogEdit(){
+                    if(_id){
+
+
+                        //修改
+                        $.ajax({
+
+                            type: 'PUT'
+
+                            , url: '/blog'
+
+                            , data: {
+                                id: _id
+                                , title: sBlogTitle
+                                , tags: sBlogTags
+                                , content: sBlogContent
+                            }
+
+                            , success: function (data) {
+
+                                body.modal('hide')
+
+                                if(data.success){
+                                    popup.alert({
+                                        title: '提示'
+                                        , body: '修改成功'
+                                    })
+
+                                    var oData = data.json
+                                    $thisTitle.text(oData.title)
+
+                                }else {
+                                    popup.alert({
+                                        title: '警告'
+                                        , body: data.data.errmsg
+                                    })
+                                }
+
+
+                            },
+
+                            dataType: 'json'
+
+                        })
+
+
+
+                    }else {
+
+                        $.ajax({
+
+                            type: 'POST'
+
+                            , url: '/blog'
+
+                            , data: {
+                                title: sBlogTitle
+                                , tags: sBlogTags
+                                , content: sBlogContent
+                                , thumbPic: sImgSrc
+                            }
+
+                            , success: function (data) {
+
+                                body.modal('hide')
+
+                                if(data.success){
+                                    popup.alert({
+                                        title: '提示'
+                                        , body: '发布成功'
+                                    })
+
+                                    if(data.json){
+
+                                        var oData = data.json
+                                            , blogImg = '<div class="media-left"><a href="#"><img class="media-object" alt="图片" src="..."></a></div>'
+
+                                        if(!oData.Img) blogImg = ''
+
+                                        $('#blog').prepend(
+                                            '<div class="blogList col-xs-12 col-sm-6"><div class="media">' +
+                                            blogImg +
+                                            '<div class="media-body"><h4 class="media-heading"><a href="/user/' + oData.name + '">' + oData.name + '</a><span>说</span></h4>' +
+                                            '<div>' + oData.time.minute + '</div>' +
+                                            '<div class="blogTitle"> ' + oData.title + '</div>' +
+                                            '</div></div></div>'
+                                        )
+
+
+                                    }
+
+                                }else {
+                                    popup.alert({
+                                        title: '警告'
+                                        , body: data.data.errmsg
+                                    })
+                                }
+
+
+                            },
+
+                            dataType: 'json'
+
+                        })
+
+                    }
                 }
             }
 
@@ -403,7 +447,6 @@ $('.deleteBlog').on('click', function (event) {
     var $this = $(this)
         , iThisId = $this.parents('.blogList')[0].id
 
-
     popup.modal({
         title: '删除微博'
         , submitTxt: '确定'
@@ -446,12 +489,93 @@ $('.deleteBlog').on('click', function (event) {
                 dataType: 'json'
 
             })
-
         }
     })
-
-
 
 })
 
 
+//图片上传监测
+$(document).on('change', '#inputFile', function(){
+
+    // 如果浏览器不支持FileReader，则不处理
+    if (!window.FileReader) return
+
+    var file = this.files[0]
+
+    if (!file.type.match('image.*')) {
+
+        popup.alert({
+            body: '请上传图片文件'
+        })
+        return
+
+    }
+
+
+    var reader = new FileReader();
+
+    reader.readAsDataURL(file)
+
+    $(reader).load(function(){
+
+        var $img = $('<img>', {'id': 'uploadForImg', 'src': this.result})
+
+        $('#uploadImgTips, #uploadForImg').after($img)
+            .remove()
+
+    })
+
+})
+
+
+
+//单张图片上传test
+//$('#inputFile').on('change', function(){
+//
+//    // 如果浏览器不支持FileReader，则不处理
+//    if (!window.FileReader) return
+//
+//
+//    var file = this.files[0]
+//
+//    if (!file.type.match('image.*')) {
+//
+//        popup.alert({
+//            body: '请上传图片文件'
+//        })
+//        return
+//
+//    }
+//
+//    var reader = new FileReader();
+//
+//    reader.readAsDataURL(file)
+//
+//    $(reader).load(function(){
+//
+//        $.ajax({
+//
+//            type: 'POST'
+//
+//            , url: '/upload/image'
+//
+//            , data: {
+//
+//                pic: this.result
+//
+//            }
+//
+//            , success: function (data) {
+//
+//                console.log(data)
+//
+//            },
+//
+//            dataType: 'json'
+//
+//        })
+//
+//    })
+//
+//})

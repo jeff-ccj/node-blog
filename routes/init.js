@@ -46,6 +46,18 @@ var routes = function (app) {
     })
 
         /*
+         * @class 获取单篇文章
+         * @date 16.05.11
+         */
+        .get('/blog/:id?', function (req, res, next) {
+
+            var iId = req.params.id
+
+            blog.getOne(res, iId)
+
+        })
+
+        /*
          * @class 发送博客post请求
          * @date 16.04.16
          */
@@ -58,6 +70,7 @@ var routes = function (app) {
                 , title: req.body.title
                 , tags: req.body.tags
                 , content: req.body.content
+                , thumbPic: req.body.thumbPic
             }
 
             //调用发送函数
@@ -184,9 +197,10 @@ var routes = function (app) {
      * @class 文件上传
      * @date 16.05.10
      */
-    app.use(function (req, res) {
+    var file = require('./file.js')
+    app.post('/upload/image', function (req, res) {
 
-        
+        file.uploadImg(req, res)
 
     })
 
