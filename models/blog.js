@@ -54,7 +54,7 @@ Blog.prototype.save = function(callback) {
         , content: this.content
         , comments: []
         , reprint_info: {}
-        , pv: 0
+        , pv: 1
     }
 
     mongodb.save('blogs', blogData, function(err, blogList) {
@@ -178,7 +178,7 @@ Blog.getBlogItem = function(id, callback) {
         mongodb.updateData(
             'blogs'
             , {_id: id}
-            , { $inc: {"pv": 1}}
+            , { $inc: {'pv': 1}}
             , function(err){}
         )
 

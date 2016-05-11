@@ -379,18 +379,23 @@ var user = {
                                     if(data.json){
 
                                         var oData = data.json
-                                            , blogImg = '<div class="media-left"><a href="#"><img class="media-object" alt="图片" src="..."></a></div>'
+                                            , blogImg = ''
 
-                                        if(!oData.Img) blogImg = ''
+                                        if(oData.thumbPic) {
+                                            blogImg = '<div class="media-left"><a href="/blog/' + oData._id + '"><img class="media-object" alt="图片" src="' + oData.thumbPic +'"></a></div>'
+                                        }
 
                                         $('#blog').prepend(
-                                            '<div class="blogList col-xs-12 col-sm-6"><div class="media">' +
+
+                                            '<div class="blogList col-xs-12 col-sm-6" id="' + oData._id + '"><div class="media">' +
                                             blogImg +
-                                            '<div class="media-body"><h4 class="media-heading"><a href="/user/' + oData.name + '">' + oData.name + '</a><span>说</span></h4>' +
+                                            '<div class="media-body"><h4 class="media-heading"><a class="blogTitle" href="/blog/' + oData._id + '">' + oData.title + '</a></h4>' +
                                             '<div>' + oData.time.minute + '</div>' +
-                                            '<div class="blogTitle"> ' + oData.title + '</div>' +
+                                            '<div><span>作者:</span><a href="/user/' + oData.name + '">' + oData.name + '</a></div>' +
                                             '</div></div></div>'
                                         )
+
+                                        console.log(oData)
 
 
                                     }

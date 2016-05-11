@@ -37,22 +37,21 @@ $(function () {
 
             success: function (data) {
 
-                if (!data.success) {
+                var cbFn = function(){}
 
-                    popup.alert({
-                        title: '提示'
-                        , body: data.msg
-                    })
+                if (data.success) {
 
-                } else {
-
-                    popup.alert({
-                        title: '提示'
-                        , body: data.msg
-                    })
+                    cbFn = function(){
+                        location.href = '/'
+                    }
 
                 }
 
+                popup.alert({
+                    title: '提示'
+                    , body: data.msg
+                    , cancelCallBack: cbFn
+                })
 
             },
 
