@@ -192,6 +192,9 @@ var user = {
             + '<div id="blogContent"></div>'
             + '</div>'
             , $thisTitle
+            , $thisContent
+            , $thisTags
+            , $thisThumbPic
 
         popup.modal({
             id: 'blogToolBox'
@@ -213,13 +216,26 @@ var user = {
 
                 //如果是修改,初始化数据
                 if (_id) {
-                    $this = $('#' + _id)
-                    $thisTitle = $this.find('.blogTitle')
-                    $thisContent = $this.find('.blogContent')
+
+                    //设置内容
+                    $thisTitle = $('.title')
+                    $thisContent = $('.contentBox')
+                    $thisTags = $('.tags')
+                    $thisThumbPic = $('.info')
                     $('#blogTitle').val($thisTitle.text())
+                    $('#blogTags').val($thisTags.text())
                     $('#blogContent').summernote(
                         'code', $thisContent.html() || '<br>'
                     )
+                    var sThumbPic = $thisThumbPic.data('thumb')
+                    if(sThumbPic){
+
+                        $('#uploadImgTips').after(
+                            '<img id="uploadForImg" src="' + sThumbPic + '">'
+                        ).remove()
+
+                    }
+
                 }else {
 
                     //否则清空数据
@@ -286,7 +302,6 @@ var user = {
                 function blogEdit(){
                     if(_id){
 
-
                         //修改
                         $.ajax({
 
@@ -299,6 +314,7 @@ var user = {
                                 , title: sBlogTitle
                                 , tags: sBlogTags
                                 , content: sBlogContent
+                                , thumbPic: sImgSrc
                             }
 
                             , success: function (data) {
@@ -312,7 +328,12 @@ var user = {
                                     })
 
                                     var oData = data.json
+
+                                    //修改后数据重设
                                     $thisTitle.text(oData.title)
+                                    $thisTags.text(oData.tags)
+                                    $thisContent.html(oData.content)
+                                    $thisThumbPic.attr('thumb', oData.thumbPic)
 
                                 }else {
                                     popup.alert({
@@ -432,8 +453,8 @@ $('.editBlog').on('click', function (event) {
 
     event.preventDefault()
 
-    var $this = $(this)
-        , iThisId = $this.parents('.blogList')[0].id
+
+    var iThisId = location.pathname.replace('/blog/', '')
 
     user.sendBlog(iThisId)
 
@@ -444,8 +465,7 @@ $('.deleteBlog').on('click', function (event) {
 
     event.preventDefault()
 
-    var $this = $(this)
-        , iThisId = $this.parents('.blogList')[0].id
+    var iThisId = location.pathname.replace('/blog/', '')
 
     popup.modal({
         title: '删除微博'
@@ -474,7 +494,8 @@ $('.deleteBlog').on('click', function (event) {
                             , body: '删除成功'
                         })
 
-                        $('#' + iThisId).remove()
+                        //删除成功返回首页
+                        location.href = '/'
 
                     }else {
                         popup.alert({

@@ -3,13 +3,24 @@
   * @author  Jeff Tsui
   * @date    16.05.11
   * @mail    jeff.ccjie@gmail.com
+
 extends ../base/layout
+
+block append styles
+  link(rel='stylesheet', href='/stylesheets/blog_item.css')
+
 block content
-  h1 #{blog.title}
-  div.info
+  h1.title #{blog.title}
+  div.info(data-thumb=blog.thumbPic)
     span.tags #{blog.tags}
+    a.name(href='/user/' + blog.name) #{blog.name}
+    span.arrow |
     span.time #{blog.time.minute}
     span.arrow |
-    a(href='/user/' + blog.name) #{blog.name}
+    span.pv 阅读(#{blog.pv})
   div.contentBox.
     !{blog.content}
+  -if(user && user.name == blog.name)
+    div.blogTool
+      span.editBlog 修改
+      span.deleteBlog  删除

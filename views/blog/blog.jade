@@ -17,13 +17,10 @@
             h4.media-heading
               a.blogTitle(href='/blog/'+ blog._id) #{blog.title}
 
-              -if(user && user.name == blog.name)
-                span.editBlog 修改
-                span.deleteBlog  删除
+            div #{blog.time.minute}
             div
               span 作者:
               a(href='/user/' + blog.name) #{blog.name}
-            div #{blog.time.minute}
   -else
     h4 暂无数据
 include ../base/paging

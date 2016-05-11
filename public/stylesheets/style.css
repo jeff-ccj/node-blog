@@ -24,13 +24,23 @@ a {
   width: 40px;
   height: 40px;
 }
+.blogTool{
+  position: fixed;
+  right: 30px;
+  top: 40%;
+}
 .editBlog, .deleteBlog{
-  position: absolute;
-  right: 10px;
-  top: 5px;
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 5px;
+  background-color: #bbbbbb;
   color: #ffffff;
   font-size: 12px;
+  line-height: 40px;
+  text-align: center;
   cursor: pointer;
+  border-radius: 4px;
 }
 .deleteBlog{
   right: 50px;

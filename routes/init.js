@@ -53,7 +53,7 @@ var routes = function (app) {
 
             var iId = req.params.id
 
-            blog.getOne(res, iId)
+            blog.getOne(res, next, iId)
 
         })
 
@@ -87,7 +87,9 @@ var routes = function (app) {
             var iId = req.body.id
                 , jData = {
                 title: req.body.title
+                , tags: req.body.tags
                 , content: req.body.content
+                , thumbPic: req.body.thumbPic
             }
 
             blog.edit(res, iId, jData)

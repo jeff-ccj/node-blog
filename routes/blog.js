@@ -157,7 +157,7 @@ var blog = {
      * @param res node对象
      * @param id [ObjectId] 博客id
      */
-    , getOne : function (res, id) {
+    , getOne : function (res, next, id) {
 
         Blog.getBlogItem(id, function(err, data){
 

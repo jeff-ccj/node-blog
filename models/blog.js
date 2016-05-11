@@ -174,6 +174,14 @@ Blog.getBlogItem = function(id, callback) {
             return callback(err)
         }
 
+        //pv增加1
+        mongodb.updateData(
+            'blogs'
+            , {_id: id}
+            , { $inc: {"pv": 1}}
+            , function(err){}
+        )
+
         return callback(null, data)
 
     })
