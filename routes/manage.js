@@ -116,7 +116,6 @@ var user = {
 
             //console.log(req)
             req.session.user = user
-            console.log(req.session)
 
             return res.json({
                 success: 1

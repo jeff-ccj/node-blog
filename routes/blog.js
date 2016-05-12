@@ -43,7 +43,7 @@ var blog = {
                 if(data){
 
                     return res.render('index', {
-                        title: uName ? uName + '的微博' : '首页'
+                        title: uName ? uName + '的微博' : '多人博客--首页'
                         , uName: uName
                         , blogs: data
                         , pages: paginate({

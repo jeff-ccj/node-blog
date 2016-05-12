@@ -395,9 +395,6 @@ var user = {
                                             '</div></div></div>'
                                         )
 
-                                        console.log(oData)
-
-
                                     }
 
                                 }else {
